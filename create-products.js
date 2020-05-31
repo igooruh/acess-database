@@ -17,6 +17,7 @@ const createProduct = dbFirebase.collection('products').doc();
 createProduct
     .set({
         product: 'Name product',
+        price: 2500.61,
         categories: [referenceCategory],
         categoriesTwo: [categoryOne]
     })
