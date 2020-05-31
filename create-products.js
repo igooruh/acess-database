@@ -16,7 +16,7 @@ const referenceCategory = dbFirebase.collection('categories').doc(categoryOne);
 const createProduct = dbFirebase.collection('products').doc();
 createProduct
     .set({
-        product: 'Name product',
+        product: 'Sony TV Bravia 55"',
         price: 2500.61,
         categories: [referenceCategory],
         categoriesTwo: [categoryOne]
