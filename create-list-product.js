@@ -13,5 +13,15 @@ const produts = dbFirebase.collection('products').get();
 produts.then(snap => {
     snap.forEach(doc => {
         console.log(doc.id, '==>', doc.data())
+        dbFirebase
+            .collection('products')
+            .doc(doc.id)
+            .collection('images')
+            .get()
+            .then(imageSnapshot => {
+                imageSnapshot.forEach(img => {
+                    console.log(' img ===> ', img.id, '=>', img.data());
+                })
+            })
     })
 });
