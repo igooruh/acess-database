@@ -24,7 +24,14 @@ const remove = async(id) => {
     await doc.delete();
 }
 
+const createCategory = async data => {
+
+    const create = db.collection('categories').doc();
+    await create.set(data);
+}
+
 module.exports = {
     findAll,
-    remove
+    remove,
+    createCategory
 }
