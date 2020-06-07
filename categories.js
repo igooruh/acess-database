@@ -30,8 +30,15 @@ const createCategory = async data => {
     await create.set(data);
 }
 
+const updateCategory = async (id, data) => {
+
+    const updateCat = db.collection('categories').doc(id);
+    await updateCat.update(data);
+}
+
 module.exports = {
     findAll,
     remove,
-    createCategory
+    createCategory,
+    updateCategory
 }
