@@ -18,6 +18,13 @@ const findAll = async() => {
     return categories;
 }
 
+const remove = async(id) => {
+
+    const doc = db.collection('catagories').doc(id);
+    await doc.delete();
+}
+
 module.exports = {
-    findAll
+    findAll,
+    remove
 }
