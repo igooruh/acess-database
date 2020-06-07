@@ -2,7 +2,7 @@ const db = require('./services/firestore');
 
 const findAll = async() => {
 
-    const categoriesDB = await db.collection('catagories').get();
+    const categoriesDB = await db.collection('categories').get();
 
     if(categoriesDB.empty) {
         return [];
@@ -20,7 +20,7 @@ const findAll = async() => {
 
 const remove = async(id) => {
 
-    const doc = db.collection('catagories').doc(id);
+    const doc = db.collection('categories').doc(id);
     await doc.delete();
 }
 
