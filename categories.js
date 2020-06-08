@@ -23,7 +23,7 @@ const findAllPagineted = async({ pageSize = 10, startAfter = '' }) => {
     const categoriesDB = await db
         .collection('categories')
         .orderBy('category')
-        .limit(pageSize)
+        .limit(pageSize + 1)
         .startAfter(startAfter)
         .get();
 
@@ -48,7 +48,9 @@ const findAllPagineted = async({ pageSize = 10, startAfter = '' }) => {
 
     return {
         data: categories,
-        total: categories.length
+        total: categories.length,
+        hasNext: total > pageSize,
+        startAfter:  total > pageSize ? categories[categories.length-1].category : ''
     }
 }
 
