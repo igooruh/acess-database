@@ -18,6 +18,40 @@ const findAll = async() => {
     return categories;
 }
 
+const findAllPagineted = async({ pageSize = 10, startAfter = '' }) => {
+
+    const categoriesDB = await db
+        .collection('categories')
+        .orderBy('category')
+        .limit(pageSize)
+        .startAfter(startAfter)
+        .get();
+
+    if(categoriesDB.empty) {
+        return {
+            data: [],
+            total: 0
+        }
+    }
+    const categoriesPaginated = [];
+    let total = 0;
+
+    categoriesDB.forEach(doc => {
+        if(total < pageSize) {
+            categoriesPaginated.push({
+                ...doc.data(),
+                id: doc.id
+            })
+            total++;
+        }
+    })
+
+    return {
+        data: categories,
+        total: categories.length
+    }
+}
+
 const remove = async(id) => {
 
     const doc = db.collection('categories').doc(id);
@@ -38,6 +72,7 @@ const updateCategory = async (id, data) => {
 
 module.exports = {
     findAll,
+    findAllPagineted,
     remove,
     createCategory,
     updateCategory
