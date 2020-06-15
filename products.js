@@ -1,5 +1,6 @@
 const db = require('./services/firestore');
 const admin = require('firebase-admin');
+const { collection } = require('./services/firestore');
 
 const create = async ({ categories, ...data }) => {
 
@@ -10,6 +11,17 @@ const create = async ({ categories, ...data }) => {
         categories: categoriesRefs,
         categories2: categories
     });
+}
+
+const addImages = async(id, data) => {
+
+    const imageRef = db
+        .collection('products')
+        .doc(id)
+        collection('images')
+        .doc();
+
+    await imageRef.set(data);
 }
 
 const update = async(id, { categories, ...data }) => {
@@ -49,6 +61,7 @@ const removeImages = async id => {
 
 module.exports = {
     create,
+    addImages,
     update,
     remove
 }
