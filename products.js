@@ -42,6 +42,65 @@ const findAll = async() => {
     return products2
 }
 
+const findAllPaginated = async({ pageSize = 10, startAfter = '' }) => {
+
+    const productsDB = await db
+        .collection('products')
+        .orderBy('product')
+        .startAfter(startAfter)
+        .limit(pageSize+1)
+        .get();
+
+    if(productsDB.empty){
+      return {
+        data: [],
+        total: 0
+      }
+    }
+
+    const products = [];
+    let total = 0;
+    productsDB.forEach(doc => {
+      if(total < pageSize){
+        products.push({
+          ...doc.data(),
+          id: doc.id
+        });
+      }
+
+      total++;
+    });
+  
+    const products2 = [];
+    for await(product of products){
+      const imgs = []
+      const imgsDB = await db
+        .collection('products')
+        .doc(product.id)
+        .collection('images')
+        .get();
+        
+      imgsDB.forEach(img => {
+        imgs.push({
+          ...img.data(),
+          id: img.id
+        });
+      });
+
+      products2.push({
+        ...product,
+        imgs
+      });
+    }
+  
+    return {
+      data: products2,
+      total: products.length,
+      hasNext: total > pageSize,
+      startAfter: total > pageSize ? products[products.length-1].category : ''
+    }
+}
+
 const create = async ({ categories, ...data }) => {
 
     const doc = db.collection('products').doc();
@@ -101,6 +160,7 @@ const removeImages = async id => {
 
 module.exports = {
     findAll,
+    findAllPaginated,
     create,
     addImages,
     update,
