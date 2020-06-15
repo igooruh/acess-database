@@ -1,6 +1,5 @@
 const db = require('./services/firestore');
 const admin = require('firebase-admin');
-const { collection } = require('./services/firestore');
 
 const create = async ({ categories, ...data }) => {
 
