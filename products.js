@@ -1,6 +1,47 @@
 const db = require('./services/firestore');
 const admin = require('firebase-admin');
 
+const findAll = async() => {
+
+    const productsDB = await db.collection('products').get();
+
+    if(productsDB.empty) {
+        return [];
+    }
+
+    const products = []
+    productsDB.forEach(doc => {
+        products.push({
+            ...doc.data(),
+            id: doc.id
+        });
+    })
+
+    const products2 = [];
+    for await(product of products) {
+        const imgs = [];
+        const imgsDB = await db
+        .collection('products')
+        .doc(product.id)
+        .collection('images')
+        .get();
+
+        imgsDB.forEach(img => {
+            imgs.push({
+                ...img.data(),
+                id: img.id
+            });
+        });
+
+        products2.push({
+            ...product,
+            imgs
+        });
+    }
+
+    return products2
+}
+
 const create = async ({ categories, ...data }) => {
 
     const doc = db.collection('products').doc();
@@ -59,6 +100,7 @@ const removeImages = async id => {
 }
 
 module.exports = {
+    findAll,
     create,
     addImages,
     update,
